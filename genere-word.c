@@ -1,14 +1,29 @@
 #include <stdlib.h>
+/*-------------------------------------BIBLIOTHEQUES--------------------------*/
 #include <stdio.h>
 #include <limits.h>
 #include <time.h>
 #include <string.h>
 
+/*----------------------------------------CONSTANTES--------------------------*/
+
 #define CHAR_START 33
 #define CHAR_END 126
 
 
+/* ----------------------------------------------------------------------------
+*                                DECLARATIONS FONCTIONS
+*----------------------------------------------------------------------------*/
+
+/**
+ * generateWords : génère wordNumber mots de taille comprise entre wordSizeMin
+ * 								 et wordSizeMax sur un alpbabet de taille alphabetSize.
+ */
 void generateWords(int wordNumber, int wordSizeMin, int wordSizeMax, int alphabetSize);
+
+/* ----------------------------------------------------------------------------
+*                                FONCTION PRINCIPALE
+*----------------------------------------------------------------------------*/
 
 int main(int argc, char* argv[]) {
 	if(argc != 5) {
@@ -23,6 +38,10 @@ int main(int argc, char* argv[]) {
 	generateWords(wordNumber, wordSizeMin, wordSizeMax, alphabetSize);
 	
 }
+
+/* ----------------------------------------------------------------------------
+*                                FONCTIONS
+*-----------------------------------------------------------------------------*/
 
 void generateWords(int wordNumber, int wordSizeMin, int wordSizeMax, int alphabetSize) {
 	for(int i = 0; i < wordNumber; i++) {
