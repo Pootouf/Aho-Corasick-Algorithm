@@ -67,7 +67,7 @@ Trie createTrieHash(int maxNode) {
   char *finite = malloc((size_t) maxNode * sizeof(char));
   if (finite == NULL) {
     fprintf(stderr, "malloc error\n");
-    freeAndTerminateHash(trie);
+    freeHash(trie);
   }
   for (int i = 0; i < maxNode; i++) {
     finite[i] = '0';
@@ -249,7 +249,7 @@ List allocateAndInitializeList(Trie trie, int startNode, int targetNode,
   return list;
 }
 
-void freeAndTerminateHash(Trie trie) {
+void freeHash(Trie trie) {
   int tableSize = FILL_RATE * trie->maxNode;
   for (int i = 0; i < tableSize; i++) {
     if (trie->transition[i] != NULL) {
@@ -302,6 +302,6 @@ void testFunctionsHash(void) {
   printf("\n est dans le trie cactus ? %d", result1);
   printf("\n est dans le trie chocolate ? %d\n", result2);
   //printTrieHash(trie);
-  freeAndTerminateHash(trie);
+  freeHash(trie);
 }
 

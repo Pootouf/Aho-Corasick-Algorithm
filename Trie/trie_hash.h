@@ -34,15 +34,16 @@ void printTrieHash(Trie trie);
 
 /**freeAndTerminate : libère l'espace alloué à la structure passée en paramètre
  *           renvoie une erreur */
-void freeAndTerminateHash(Trie trie);
+void freeHash(Trie trie);
 
 /**testFunctions : teste les fonctions de création, insertion, présence dans un
  * 								trie et l'affiche
  */
 void testFunctionsHash(void);
 
-/*
- * int getNodeFromCharacter(Trie trie, int beginNode, char c);
- */
+
+int getNodeFromCharacter(Trie trie, int beginNode, char c);
+
+void createTransition(Trie trie, int startNode, int targetNode, char c);
 
 #endif

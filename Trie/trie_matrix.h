@@ -34,14 +34,7 @@ void printTrieMatrix(Trie trie);
  *           renvoie une erreur */
 void freeAndTerminateMatrix(Trie trie);
 
-/**testFunctions : teste les fonctions de création, insertion, présence dans un
- * 								trie et l'affiche
- */
-void testFunctionsMatrix();
+int getNodeFromCharacter(Trie trie, int beginNode, unsigned char c);
 
-/* A REVOIR
- * int getNodeFromCharacter(Trie trie, int beginNode, char c);
- * 
- * void createTransition(Trie trie, int startNode, int targetNode, char c);
- * /
+void createTransition(Trie trie, int startNode, int targetNode, unsigned char c);
 #endif

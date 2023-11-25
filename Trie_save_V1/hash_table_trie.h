@@ -11,7 +11,7 @@ Trie createTrieForHash(int maxNode);
 
 void insertInTrieForHash(Trie trie, unsigned char *w);
 
-int getNodeFromCharacter(Trie trie, int beginNode, char c)
+int getNodeFromCharacter(Trie trie, int beginNode, char c);
 
 int isInTrieForHash(Trie trie, unsigned char *w);
 

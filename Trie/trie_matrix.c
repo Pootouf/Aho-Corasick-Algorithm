@@ -18,14 +18,19 @@ char *finite; /* etats terminaux */
  *                     maxNode x UCHAR_MAX dans la structure pointée par trie */
 int **allocateAndInitializeMatrix(Trie trie, int maxNode);
 
-/**testParametersHash : teste les paramètres passés en entrée, échoue s'ils sont
+/**testParametersMatrix : teste les paramètres passés en entrée, échoue s'ils sont
  * 									nuls*/
-void testParametersHash(Trie trie, unsigned char *w);
+void testParametersMatrix(Trie trie, unsigned char *w);
 
+void testFunctionsMatrix(void);
 
 /* ----------------------------------------------------------------------------
  *                                FONCTIONS
  *----------------------------------------------------------------------------*/
+
+int main() {
+	testFunctionsMatrix();
+}
 
 Trie createTrieMatrix(int maxNode) {
 	if(maxNode < 1) {
@@ -58,13 +63,13 @@ Trie createTrieMatrix(int maxNode) {
 
 void insertInTrieMatrix(Trie trie, unsigned char *w) {
   /*------------------------------------Tests---------------------------------*/
-  testParametersHash(trie, w);
+  testParametersMatrix(trie, w);
   /*-------------------------------Initialisation des variables---------------*/
   int currentLetterNb = 0;
   int currentNode = 0;
   /*-------------------------------Boucle sur le parcours du mot w------------*/
   while (w[currentLetterNb] != '\0') {
-    int result = trie->transition[currentNode][w[currentLetterNb]];
+    int result = getNodeFromCharacter(trie, currentNode, w[currentLetterNb]);
     /*----------------------------Test d'existence du noeud-------------------*/
     if (result != -1) {
       currentNode = result;
@@ -73,8 +78,7 @@ void insertInTrieMatrix(Trie trie, unsigned char *w) {
         fprintf(stderr, "cannot insert, no place left\n");
         return;
       }
-      /*--------------------------Création du noeud---------------------------*/
-      trie->transition[currentNode][w[currentLetterNb]] = trie->nextNode;
+      createTransition(trie, currentNode, trie->nextNode, w[currentLetterNb]);
       currentNode = trie->nextNode;
       ++trie->nextNode;
     }
@@ -86,13 +90,13 @@ void insertInTrieMatrix(Trie trie, unsigned char *w) {
 
 int isInTrieMatrix(Trie trie, unsigned char *w) {
 	/*------------------------------------Tests---------------------------------*/
-  testParametersHash(trie, w);
+  testParametersMatrix(trie, w);
   /*------------------------------------Initialisation des variables----------*/
   int currentLetterNb = 0;
   int currentNode = 0;
   /*-------------------------------Boucle sur le parcours du mot w------------*/
   while (w[currentLetterNb] != '\0') {
-    int result = trie->transition[currentNode][w[currentLetterNb]];
+    int result = getNodeFromCharacter(trie, currentNode, w[currentLetterNb]);
     /*----------------------------Test d'existence du mot---------------------*/
     if (result == -1) {
 			return 0;
@@ -103,35 +107,6 @@ int isInTrieMatrix(Trie trie, unsigned char *w) {
 	return (trie->finite[currentNode] == '1') ? 1 : 0;
 }
 
-/* A REVOIR
- int getNodeFromCharacter(Trie trie, int beginNode, char c) {
-	int hashValue = getHashValue(beginNode, c, trie->maxNode * HASH_RATIO);
-	List list = trie->transition[hashValue];
-	while(list != NULL && (list->startNode != beginNode || list->letter != c)) {
-		list = list->next;
-	}
-	if(list == NULL) {
-		return -1;
-	} else {
-		return list->targetNode;
-	}
-} 
-* 
-void createTransition(Trie trie, int startNode, int targetNode, char c) {
-	int isNewNode = 1;
-	for(int i = 0; i < UCHAR_MAX; i++) {
-		if(trie->transition[targetNode][i] != -1) {
-			isNewNode = 0;
-			if(trie->nextNode >= trie->maxNode) {
-				fprintf(stderr, "Nombre maximal d'état atteint, arrêt\n");
-				return;
-			}
-			break;
-		}
-	}
-	trie->transition[startNode][c] = targetNode;
-}
-* */
 
 /* ----------------------------------------------------------------------------
  *                                 OUTILS
@@ -188,6 +163,14 @@ void printTrieMatrix(Trie trie) {
   }
 }
 
+int getNodeFromCharacter(Trie trie, int beginNode, unsigned char c) {
+	return trie->transition[beginNode][c];
+}
+
+void createTransition(Trie trie, int startNode, int targetNode, unsigned char c) {
+	trie->transition[startNode][c] = targetNode;
+}
+
 
 
 
@@ -223,5 +206,3 @@ void testFunctionsMatrix(void) {
   //printTrie(trie);
   freeAndTerminateMatrix(trie);
 }
-
-
