@@ -9,7 +9,7 @@
 /**Taille du tableau = 4/3 * nombre de noeuds
  * Constante maintenant le taux de remplissage de la table de hachage inférieure
  * ou égale à 0.75*/
-#define FILL_RATE 4/3
+#define FILL_RATE (4/3)
 
 /**Taille du trie*/
 #define TRIE_HEIGHT 8
@@ -36,14 +36,9 @@ void printTrieHash(Trie trie);
  *           renvoie une erreur */
 void freeHash(Trie trie);
 
-/**testFunctions : teste les fonctions de création, insertion, présence dans un
- * 								trie et l'affiche
- */
-void testFunctionsHash(void);
 
+int getNodeFromCharacter(Trie trie, int beginNode, unsigned char c);
 
-int getNodeFromCharacter(Trie trie, int beginNode, char c);
-
-void createTransition(Trie trie, int startNode, int targetNode, char c);
+void createTransition(Trie trie, int startNode, int targetNode, unsigned char c);
 
 #endif

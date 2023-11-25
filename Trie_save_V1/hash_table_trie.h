@@ -19,4 +19,6 @@ void printTrieForHash(Trie trie);
 
 void freeTrieForHash(Trie trie);
 
+void createTransition(Trie trie, int startNode, int targetNode, char c);
+
 #endif

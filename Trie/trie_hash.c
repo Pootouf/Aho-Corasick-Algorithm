@@ -30,17 +30,26 @@ int hashFunction(int state, unsigned char letter, int size);
 
 /**allocateAndInitializeList : alloue et initialise une liste de transition d'un
  *                 état à un autre en passant par une étiquette*/
-List allocateAndInitializeList(Trie trie, int startNode, int targetNode,
+List allocateAndInitializeList(int startNode, int targetNode,
     unsigned char letter);
 
 /**testParametersHash : teste les paramètres passés en entrée, échoue s'ils sont
  *                  nuls*/
 void testParametersHash(Trie trie, unsigned char *w);
 
+/**testFunctions : teste les fonctions de création, insertion, présence dans un
+ * 								trie et l'affiche
+ */
+void testFunctionsHash(void);
+
 
 /* ----------------------------------------------------------------------------
 *                                FONCTIONS
 *----------------------------------------------------------------------------*/
+
+int main() {
+	testFunctionsHash();
+}
 
 Trie createTrieHash(int maxNode) {
   if (maxNode < 1) {
@@ -84,64 +93,13 @@ void insertInTrieHash(Trie trie, unsigned char *w) {
   int currentNode = 0;
   /*-------------------------------Boucle sur le parcours du mot w------------*/
   while (w[currentLetterNb] != '\0') {
-    /*----------------------------Variables locales---------------------------*/
-    unsigned char letter = w[currentLetterNb];
-    int tableSize = FILL_RATE * trie->maxNode;
-    int key = hashFunction(currentNode, letter, tableSize);
-    List *listsTab = trie->transition;
-    /*----------------------------Vérification de lettre et ajout-------------*/
-    if (listsTab[key] != NULL) {
-      List list = listsTab[key];
-      /*S'il existe une liste à la clé calculée dans le tableau
-       * et tant que l'on n'est pas à la fin du parcours*/
-      while (list != NULL) {
-        /*Si l'on trouve la même transition*/
-        if (list->startNode == currentNode && list->letter == letter) {
-          /*On passe à la prochaine lettre et transition du mot*/
-          currentNode = list->targetNode;
-          break;
-        }
-        /*En revanche, si l'on n'est pas encore arrivé à la fin du
-         * parcours, on contunue*/
-        if (list->next != NULL) {
-          list = list->next;
-          /*Sinon, on crée notre transition en bout de liste*/
-        } else {
-					if(trie->maxNode == trie->nextNode) {
-						fprintf(stderr, "Cannot insert, no place left\n");
-						return;
-					}
-          List result = allocateAndInitializeList(trie, currentNode,
-              trie->nextNode, letter);
-          if (result == NULL) {
-            return;
-          }
-          list->next = result;
-          currentNode = result->targetNode;
-          break;
-        }
-      }
-      /*Si la liste n'est pas nulle, et donc que la transition existe déjà
-       * on continue*/
-      if (list != NULL) {
-        ++currentLetterNb;
-        continue;
-      }
-      /*S'il n'y a pas de liste à la clé calculée dans le tableau
-       * on en crée une*/
+		int nextNode = getNodeFromCharacter(trie, currentNode, w[currentLetterNb]);
+    if (nextNode == -1) {
+			createTransition(trie, currentNode, trie->nextNode, w[currentLetterNb]);
+      currentNode = getNodeFromCharacter(trie, currentNode, w[currentLetterNb]);
     } else {
-			if(trie->maxNode == trie->nextNode) {
-				fprintf(stderr, "Cannot insert, no place left\n");
-				return;
-			}
-      List result = allocateAndInitializeList(trie, currentNode, trie->nextNode,
-          letter);
-      if (result == NULL) {
-        return;
-      }
-      trie->transition[key] = result;
-      currentNode = result->targetNode;
-    }
+			currentNode = nextNode;
+		}
     ++currentLetterNb;
   }
   trie->finite[currentNode] = '1';
@@ -155,51 +113,57 @@ int isInTrieHash(Trie trie, unsigned char *w) {
   int currentNode = 0;
   /*-------------------------------Boucle sur le parcours du mot w------------*/
   while (w[currentLetterNb] != '\0') {
-    /*----------------------------Variables locales---------------------------*/
-    unsigned char letter = w[currentLetterNb];
-    int tableSize = FILL_RATE * trie->maxNode;
-    int key = hashFunction(currentNode, letter, tableSize);
-    List *listsTab = trie->transition;
-    /*----------------------------Vérification de lettre ---------------------*/
-    if (listsTab[key] != NULL) {
-      List list = listsTab[key];
-      /*S'il existe une liste à la clé calculée dans le tableau
-       * et tant que l'on n'est pas à la fin du parcours*/
-      while (list != NULL) {
-        /*Si l'on trouve la même transition*/
-        if (list->startNode == currentNode && list->letter == letter) {
-          /*On passe à la prochaine lettre et transition du mot*/
-          currentNode = list->targetNode;
-          break;
-        }
-        /*En revanche, si l'on n'est pas encore arrivé à la fin du
-         * parcours, on contunue*/
-        if (list->next != NULL) {
-          list = list->next;
-        } else {
-          return 0;
-        }
-      }
-      /*Si la liste n'est pas nulle, et donc que la transition existe déjà
-       * on continue*/
-      if (list != NULL) {
-        ++currentLetterNb;
-        continue;
-      }
-    } else {
-      return 0;
-    }
-    ++currentLetterNb;
+		int nextNode = getNodeFromCharacter(trie, currentNode, w[currentLetterNb]);
+		if(nextNode == -1) {
+			return 0;
+		} else {
+			currentNode = nextNode;
+		}
+		currentLetterNb++;
   }
   return trie->finite[currentNode] == '1';
 }
 
-/* A REVOIR
-* 
-* int getNodeFromCharacter(Trie trie, int beginNode, char c) {
-	return trie->transition[beginNode][c];
+int getNodeFromCharacter(Trie trie, int beginNode, unsigned char c) {
+	int hashValue = hashFunction(beginNode, c, trie->maxNode * FILL_RATE);
+	List list = trie->transition[hashValue];
+	while(list != NULL && (list->startNode != beginNode || list->letter != c)) {
+		list = list->next;
+	}
+	if(list == NULL) {
+		return -1;
+	} else {
+		return list->targetNode;
+	}
 }
-* */
+
+void createTransition(Trie trie, int startNode, int targetNode, unsigned char c) {
+	int nextNode = getNodeFromCharacter(trie, startNode, c);
+	if (nextNode == targetNode) {
+		return;
+	}
+	if(trie->maxNode == trie->nextNode) {
+		fprintf(stderr, "Cannot insert, no place left\n");
+		return;
+	}
+	List result = allocateAndInitializeList(startNode, targetNode, c);
+	if (result == NULL) {
+		return;
+	}
+	
+	int key = hashFunction(startNode, c, trie->maxNode * FILL_RATE);
+	List oldList = trie->transition[key];
+	if(oldList == NULL) {
+		trie->transition[key] = result;
+	} else {
+		while(oldList->next != NULL) {
+			oldList = oldList->next;
+		}
+		oldList->next = result;
+	}
+	
+	++trie->nextNode;
+}
 
 /* ----------------------------------------------------------------------------
 *                                 OUTILS
@@ -231,12 +195,8 @@ void printTrieHash(Trie trie) {
   }
 }
 
-List allocateAndInitializeList(Trie trie, int startNode, int targetNode,
+List allocateAndInitializeList(int startNode, int targetNode,
     unsigned char letter) {
-  if (trie->nextNode == trie->maxNode) {
-    fprintf(stderr, "error not enough place\n");
-    return NULL;
-  }
   List list = malloc(sizeof(struct _list));
   if (list == NULL) {
     fprintf(stderr, "error malloc\n");
@@ -245,7 +205,6 @@ List allocateAndInitializeList(Trie trie, int startNode, int targetNode,
   list->startNode = startNode;
   list->targetNode = targetNode;
   list->letter = letter;
-  ++trie->nextNode;
   return list;
 }
 
@@ -255,7 +214,7 @@ void freeHash(Trie trie) {
     if (trie->transition[i] != NULL) {
       List list = trie->transition[i];
       List next = list->next;
-      while (next != NULL) {
+      while (next != NULL) {  // ERREUR ICI
         List acc = next->next;
         free(next);
         next = acc;
@@ -291,7 +250,7 @@ void testFunctionsHash(void) {
   unsigned char word[] = "cat";
   insertInTrieHash(trie, word);
   printTrieHash(trie);
-  printf("taille : %d", trie->maxNode);
+  printf("taille : %d\n", trie->maxNode);
   unsigned char word2[] = "cactus";
   insertInTrieHash(trie, word2);
   printTrieHash(trie);
