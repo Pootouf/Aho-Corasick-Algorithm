@@ -19,4 +19,4 @@ trie_hash.o: trie_hash.c trie_hash.h
 
 
 clean:
-	$(RM) *.o  trie
+	$(RM) *.o  trie_matrix trie_hash
