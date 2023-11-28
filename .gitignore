@@ -1,0 +1,10 @@
+.idea
+cmake-build-debug
+CMakeLists.txt
+*.o
+genere-text
+genere-word
+ac_hachage
+ac_matrice
+Trie/trie_hash
+Trie/trie_matrix

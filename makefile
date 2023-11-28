@@ -27,4 +27,4 @@ ac_matrice: ac.o Trie/trie_matrix.o
 		$(CC) -o ac_matrice ac.o $(LDFLAGS)
 
 clean:
-	$(RM) *.o genere-text genere-word
+	$(RM) *.o genere-text genere-word ac_hachage ac_matrice
