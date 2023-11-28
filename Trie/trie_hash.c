@@ -1,4 +1,23 @@
-#include "trie_hash.h"
+#include "trie.h"
+
+/*----------------------------------------CONSTANTES--------------------------*/
+
+/**Taille du tableau = 4/3 * nombre de noeuds
+ * Constante maintenant le taux de remplissage de la table de hachage inférieure
+ * ou égale à 0.75*/
+#define FILL_RATE (4/3)
+
+#define TRIE_HEIGHT 8
+
+#define NO_NODE (-1)
+
+#define MIN_NODE_NUMBER 1
+
+#define FIRST_NODE_NUMBER 1
+
+#define NOT_FINAL '0'
+
+#define FINAL '1'
 
 /*----------------------------------------STRUCTURES--------------------------*/
 

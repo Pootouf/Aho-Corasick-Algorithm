@@ -10,11 +10,11 @@ all: trie_matrix trie_hash
 trie_matrix: trie_matrix.o
 		$(CC) -o trie_matrix trie_matrix.o $(LDFLAGS)
 
-trie_matrix.o: trie_matrix.c trie_matrix.h
+trie_matrix.o: trie_matrix.c trie.h
 	$(CC) -c trie_matrix.c $(CFLAGS)
 
 
-trie_hash.o: trie_hash.c trie_hash.h
+trie_hash.o: trie_hash.c trie.h
 	$(CC) -c trie_hash.c $(CFLAGS)
 
 

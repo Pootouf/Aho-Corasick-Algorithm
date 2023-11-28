@@ -1,5 +1,6 @@
-#ifndef __TRIE_MATRIX_H
-#define __TRIE_MATRIX_H
+#ifndef __TRIE_H
+#define __TRIE_H
+
 /*-------------------------------------BIBLIOTHEQUES--------------------------*/
 
 #include <stdio.h>
@@ -7,17 +8,6 @@
 #include <limits.h>
 #include <string.h>
 
-/*----------------------------------------CONSTANTES--------------------------*/
-
-#define ALPHABET_SIZE UCHAR_MAX
-#define TRIE_HEIGHT 8
-
-#define NO_NODE (-1)
-#define MIN_NODE_NUMBER 1
-#define FIRST_NODE_NUMBER 1
-
-#define NOT_FINAL '0'
-#define FINAL '1'
 /*----------------------------------------STRUCTURES--------------------------*/
 
 typedef struct _trie *Trie;
@@ -26,9 +16,6 @@ typedef struct _trie *Trie;
 
 /**
  * createTrie : crée un Trie de taille maximum maxNode
- * @pre maxNode > MIN_NODE_NUMBER
- * @param maxNode
- * @return Trie
  */
 Trie createTrie(int maxNode);
 

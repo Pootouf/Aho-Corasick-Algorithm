@@ -1,4 +1,16 @@
-#include "trie_matrix.h"
+#include "trie.h"
+
+/*----------------------------------------CONSTANTES--------------------------*/
+
+#define ALPHABET_SIZE UCHAR_MAX
+#define TRIE_HEIGHT 8
+
+#define NO_NODE (-1)
+#define MIN_NODE_NUMBER 1
+#define FIRST_NODE_NUMBER 1
+
+#define NOT_FINAL '0'
+#define FINAL '1'
 
 /*----------------------------------------STRUCTURES--------------------------*/
 

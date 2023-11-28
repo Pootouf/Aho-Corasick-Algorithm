@@ -3,7 +3,7 @@ CFLAGS = -std=c18 -Wall -Wconversion -Werror -Wextra -Wfatal-errors -Wpedantic -
 LDFLAGS = -lm
 RM = rm
 
-all: genere-text genere-word
+all: genere-text genere-word ac_hachage ac_matrice
 
 genere-text: genere-text.o
 		$(CC) -o genere-text genere-text.o $(LDFLAGS)
@@ -16,6 +16,15 @@ genere-word: genere-word.o
 
 genere-word.o: genere-word.c
 		$(CC) -c genere-word.c $(CFLAGS)
+
+ac.o: ac.c Trie/trie.h
+		$(CC) -c ac.c $(CFLAGS)
+
+ac_hachage: ac.o Trie/trie_hash.o
+		$(CC) -o ac_hachage ac.o $(LDFLAGS)
+
+ac_matrice: ac.o Trie/trie_matrix.o
+		$(CC) -o ac_matrice ac.o $(LDFLAGS)
 
 clean:
 	$(RM) *.o genere-text genere-word
