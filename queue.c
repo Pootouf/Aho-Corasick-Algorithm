@@ -13,7 +13,15 @@ typedef struct _cell *Cell;
 *                                DECLARATIONS FONCTIONS
 *----------------------------------------------------------------------------*/
 
+/**
+ * createCell : crée une cellule en l'allouant avec comme valeur value.
+ */
 Cell createCell(int value);
+
+/**
+ * removeAll : enlève toutes les cellules de la file en les libérant.
+ */
+void removeAll(Queue queue);
 
 /* ----------------------------------------------------------------------------
 *                                FONCTIONS
@@ -48,6 +56,28 @@ void add(int value, Queue queue) {
 	}
 }
 
+int remove(Queue queue) {
+	if(queue == NULL) {
+		fprintf(stderr, "Queue not valid, cannot add value\n");
+		exit(EXIT_FAILURE);
+	}
+	Cell firstCell = queue->first;
+	if(firstCell != NULL) {
+		Cell nextCell = firstCell->next;
+		nextCell->prev = NULL;
+		int result = firstCell->value;
+		free(firstCell);
+		return result;
+	} else {
+		exit(EXIT_FAILURE);
+	}
+}
+
+void freeQueue(Queue queue) {
+	removeAll(queue);
+	free(queue);
+}
+
 
 /* ----------------------------------------------------------------------------
 *                                 OUTILS
@@ -62,3 +92,15 @@ Cell createCell(int value) {
 	cell.value = value;
 	return cell;
 }
+
+void removeAll(Queue queue) {
+	if(queue == NULL) {
+		fprintf(stderr, "Queue not valid, cannot add value\n");
+		exit(EXIT_FAILURE);
+	}
+	while(queue->first != NULL) {
+		remove(queue);
+	}
+}
+
+
