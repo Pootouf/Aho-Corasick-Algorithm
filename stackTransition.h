@@ -11,7 +11,7 @@
 
 typedef struct _transition *Transition;
 
-typedef struct _list *List;
+typedef struct _stack *Stack;
 
 
 /*-----------------------------------------FONCTIONS--------------------------*/

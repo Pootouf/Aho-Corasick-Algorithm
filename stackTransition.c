@@ -1,5 +1,7 @@
 #include "stackTransition.h"
 
+/*----------------------------------------STRUCTURES--------------------------*/
+
 struct _transition {
     int startNode;
     char character;
@@ -8,12 +10,16 @@ struct _transition {
     Transition prev;
 };
 
-struct _list {
+struct _stack {
     Transition firstElement;
     Transition lastElement;
 };
 
+/*-------------------------DECLARATIONS DE FONCTIONS--------------------------*/
+
 Transition createTransition( int startNode, char character, int targetNode);
+
+/*-----------------------------------------FONCTIONS--------------------------*/
 
 Stack createStack() {
     Stack stack = malloc(sizeof(struct _stack));
@@ -72,6 +78,8 @@ int getTargetNodeFromTransition(Transition transition) {
 void freeTransition(Transition transition) {
     free(transition);
 }
+
+/*-----------------------------------------OUTILS----------------------------*/
 
 Transition createTransition( int startNode, char character, int targetNode) {
     Transition result = malloc(sizeof(struct _transition));
