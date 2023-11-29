@@ -78,6 +78,10 @@ int removeValue(Queue queue) {
 	}
 }
 
+int isQueueEmpty(Queue queue) {
+	return queue->first == NULL;
+}
+
 void freeQueue(Queue queue) {
 	removeAll(queue);
 	free(queue);

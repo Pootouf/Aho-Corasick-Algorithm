@@ -27,6 +27,11 @@ void addValue(int value, Queue queue);
 int removeValue(Queue queue);
 
 /**
+ * isQueueEmpty : indique si la file est vide.
+ */
+int isQueueEmpty(Queue queue);
+
+/**
  * freeQueue : libère une file queue.
  */
 void freeQueue(Queue queue);
