@@ -13,9 +13,6 @@
 
 #define FIRST_NEXT_NODE_NUMBER (FIRST_NODE + 1)
 
-#define NOT_FINAL '0'
-
-#define FINAL '1'
 
 /*----------------------------------------STRUCTURES--------------------------*/
 
@@ -292,6 +289,10 @@ void printTrie(Trie trie) {
 
 void setNodeFinal(Trie trie, int node) {
     trie->finite[node] = FINAL;
+}
+
+char isNodeFinal(Trie trie, int node) {
+    return trie->finite[node];
 }
 
 

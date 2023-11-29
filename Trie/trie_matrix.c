@@ -8,9 +8,6 @@
 #define MIN_NODE_NUMBER 1
 #define FIRST_NEXT_NODE_NUMBER (FIRST_NODE + 1)
 
-#define NOT_FINAL '0'
-#define FINAL '1'
-
 /*----------------------------------------STRUCTURES--------------------------*/
 
 struct _trie {
@@ -202,6 +199,10 @@ int isTrieFull(Trie trie) {
 
 void setNodeFinal(Trie trie, int node) {
     trie->finite[node] = FINAL;
+}
+
+char isNodeFinal(Trie trie, int node) {
+    return trie->finite[node];
 }
 
 

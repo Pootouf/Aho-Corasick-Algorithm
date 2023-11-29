@@ -11,6 +11,8 @@
 /*----------------------------------------CONSTANTES--------------------------*/
 #define FIRST_NODE 0
 #define NO_NODE (-1)
+#define NOT_FINAL '0'
+#define FINAL '1'
 
 /*----------------------------------------STRUCTURES--------------------------*/
 
@@ -70,5 +72,10 @@ int isNodeInTrie(Trie trie, int node);
  * setNodeFinal : rend un noeud final
  */
 void setNodeFinal(Trie trie, int node);
+
+/**
+ * isNodeFinal : indique si un noeud est final
+ */
+char isNodeFinal(Trie trie, int node);
 
 #endif
