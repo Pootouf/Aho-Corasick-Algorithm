@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include "Trie/trie.h"
 #include "queue.h"
+#include "stackTransition.h"
 
 /*----------------------------------------CONSTANTES--------------------------*/
 #define MAX_NODE 999
