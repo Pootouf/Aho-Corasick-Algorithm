@@ -1,13 +1,18 @@
 #include "queue.h"
 /*----------------------------------------STRUCTURES--------------------------*/
 
-struct _cell {
-	Cell *prev;
-	Cell *next;
-	int value;
-}
-
 typedef struct _cell *Cell;
+
+struct _cell {
+    Cell prev;
+    Cell next;
+    int value;
+};
+
+struct _queue {
+    Cell first;
+    Cell last;
+};
 
 /* ----------------------------------------------------------------------------
 *                                DECLARATIONS FONCTIONS
@@ -38,7 +43,7 @@ Queue create() {
 	return queue;
 }
 
-void add(int value, Queue queue) {
+void addValue(int value, Queue queue) {
 	if(queue == NULL) {
 		fprintf(stderr, "Queue not valid, cannot add value\n");
 		exit(EXIT_FAILURE);
@@ -56,7 +61,7 @@ void add(int value, Queue queue) {
 	}
 }
 
-int remove(Queue queue) {
+int removeValue(Queue queue) {
 	if(queue == NULL) {
 		fprintf(stderr, "Queue not valid, cannot add value\n");
 		exit(EXIT_FAILURE);
@@ -89,7 +94,7 @@ Cell createCell(int value) {
 		fprintf(stderr, "Error while allocating\n");
 		exit(EXIT_FAILURE);
 	}
-	cell.value = value;
+	cell->value = value;
 	return cell;
 }
 
@@ -99,7 +104,7 @@ void removeAll(Queue queue) {
 		exit(EXIT_FAILURE);
 	}
 	while(queue->first != NULL) {
-		remove(queue);
+		removeValue(queue);
 	}
 }
 

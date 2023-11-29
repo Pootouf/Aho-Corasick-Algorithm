@@ -9,11 +9,9 @@
 
 #define TRIE_HEIGHT 8
 
-#define NO_NODE (-1)
-
 #define MIN_NODE_NUMBER 1
 
-#define FIRST_NODE_NUMBER 1
+#define FIRST_NEXT_NODE_NUMBER (FIRST_NODE + 1)
 
 #define NOT_FINAL '0'
 
@@ -98,7 +96,7 @@ Trie createTrie(int maxNode) {
 
 
     trie->maxNode = maxNode;
-    trie->nextNode = FIRST_NODE_NUMBER;
+    trie->nextNode = FIRST_NEXT_NODE_NUMBER;
 
 
     size_t tableSize = getHashtableSizeFromTrie(trie);

@@ -1,16 +1,11 @@
-#ifndef __AC_H
-#define __AC_H
+#ifndef __QUEUE_H
+#define __QUEUE_H
 /*-------------------------------------BIBLIOTHEQUES--------------------------*/
 #include <stdio.h>
 #include <stdlib.h>
 /*----------------------------------------CONSTANTES--------------------------*/
 
 /*----------------------------------------STRUCTURES--------------------------*/
-
-struct _queue {
-	Cell *first;
-	Cell *last;
-}
 
 typedef struct _queue *Queue;
 
@@ -24,12 +19,12 @@ Queue create();
 /**
  * add : enfile une valeur value dans la file queue.
  */
-void add(int value, Queue queue);
+void addValue(int value, Queue queue);
 
 /**
  * remove : défile la valeur en tête de queue et la renvoie.
  */
-int remove(Queue queue);
+int removeValue(Queue queue);
 
 /**
  * freeQueue : libère une file queue.

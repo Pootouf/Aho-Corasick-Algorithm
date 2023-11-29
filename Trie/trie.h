@@ -8,6 +8,10 @@
 #include <limits.h>
 #include <string.h>
 
+/*----------------------------------------CONSTANTES--------------------------*/
+#define FIRST_NODE 0
+#define NO_NODE (-1)
+
 /*----------------------------------------STRUCTURES--------------------------*/
 
 typedef struct _trie *Trie;
