@@ -66,4 +66,9 @@ int isTrieFull(Trie trie);
  */
 int isNodeInTrie(Trie trie, int node);
 
+/**
+ * setNodeFinal : rend un noeud final
+ */
+void setNodeFinal(Trie trie, int node);
+
 #endif

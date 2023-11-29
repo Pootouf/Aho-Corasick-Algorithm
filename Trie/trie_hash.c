@@ -290,6 +290,11 @@ void printTrie(Trie trie) {
 }
 
 
+void setNodeFinal(Trie trie, int node) {
+    trie->finite[node] = FINAL;
+}
+
+
 
 /* ----------------------------------------------------------------------------
 *                                 OUTILS

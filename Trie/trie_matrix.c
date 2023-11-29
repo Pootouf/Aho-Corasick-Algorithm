@@ -200,6 +200,10 @@ int isTrieFull(Trie trie) {
     return trie->maxNode <= trie->nextNode;
 }
 
+void setNodeFinal(Trie trie, int node) {
+    trie->finite[node] = FINAL;
+}
+
 
 /* ----------------------------------------------------------------------------
  *                                 OUTILS
