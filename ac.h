@@ -1,6 +1,6 @@
 #ifndef __AC_H
 #define __AC_H
-
+#define _GNU_SOURCE
 /*-------------------------------------BIBLIOTHEQUES--------------------------*/
 #include <stdio.h>
 #include <stdlib.h>
@@ -11,6 +11,9 @@
 /*----------------------------------------CONSTANTES--------------------------*/
 #define MAX_NODE 999
 
+#define MAX_LINE_NUMBER 999
+
+#define MAX_LINE_LENGTH 999
 /*-----------------------------------------FONCTIONS--------------------------*/
 
 /**
@@ -28,6 +31,6 @@ void complete(Trie trie, int *sup);
 /**
  * ahoCorasick : exécute l'algorithme d'Aho-Corasick.
  */
-void ahoCorasick(unsigned char**worldList, int numberOfWord, 
+void ahoCorasick(unsigned char**wordList, int numberOfWord, 
 									char* text, int textSize);
 #endif

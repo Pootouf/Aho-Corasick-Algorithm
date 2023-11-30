@@ -4,7 +4,7 @@
 
 struct _transition {
     int startNode;
-    char character;
+    unsigned char character;
     int targetNode;
     Transition next;
     Transition prev;
@@ -17,7 +17,12 @@ struct _stack {
 
 /*-------------------------DECLARATIONS DE FONCTIONS--------------------------*/
 
-Transition createTransition( int startNode, char character, int targetNode);
+/**
+ * createTransition : crée une transition à partir du noeud startNode vers le 
+ * 										noeud targetNode en la lettre character.
+ */
+Transition createTransition( int startNode, unsigned char character, 
+																							int targetNode);
 
 /*-----------------------------------------FONCTIONS--------------------------*/
 
@@ -32,7 +37,7 @@ Stack createStack() {
     return stack;
 }
 
-void push(Stack stack, int startNode, char character, int targetNode) {
+void push(Stack stack, int startNode, unsigned char character, int targetNode) {
     Transition newTransition = createTransition(startNode, character, targetNode);
     Transition firstElement = stack->firstElement;
     if (firstElement == NULL) {
@@ -47,6 +52,9 @@ void push(Stack stack, int startNode, char character, int targetNode) {
 
 Transition pop(Stack stack) {
     Transition firstElement = stack->firstElement;
+    if(firstElement == NULL) {
+			return NULL;
+		}
     Transition prevElement = firstElement->prev;
     firstElement->prev = NULL;
     stack->firstElement = prevElement;
@@ -67,7 +75,7 @@ int getStartNodeFromTransition(Transition transition) {
     return transition->startNode;
 }
 
-char getCharacterFromTransition(Transition transition) {
+unsigned char getCharacterFromTransition(Transition transition) {
     return transition->character;
 }
 
@@ -81,7 +89,7 @@ void freeTransition(Transition transition) {
 
 /*-----------------------------------------OUTILS----------------------------*/
 
-Transition createTransition( int startNode, char character, int targetNode) {
+Transition createTransition( int startNode, unsigned char character, int targetNode) {
     Transition result = malloc(sizeof(struct _transition));
     if (result == NULL) {
         fprintf(stderr, "Can't allocate transition\n");

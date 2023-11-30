@@ -74,10 +74,6 @@ void appendListInTableOfList(List* table, List list, int key);
 *                                FONCTIONS
 *----------------------------------------------------------------------------*/
 
-int main(void) {
-	testFunctionsHash();
-}
-
 Trie createTrie(int maxNode) {
     if (maxNode < MIN_NODE_NUMBER) {
         fprintf(stderr, "Node number insufficient\n");
@@ -129,7 +125,7 @@ void insertInTrie(Trie trie, unsigned char *word) {
     while (word[currentLetterNb] != '\0') {
         int nextNode = getNodeFromCharacter(trie, currentNode, word[currentLetterNb]);
         if (nextNode == NO_NODE) {
-            createTransition(trie, currentNode, trie->nextNode, word[currentLetterNb]);
+            createTransitionInTrie(trie, currentNode, trie->nextNode, word[currentLetterNb]);
             currentNode = getNodeFromCharacter(trie, currentNode, word[currentLetterNb]);
         } else {
             currentNode = nextNode;
@@ -175,17 +171,17 @@ int getNodeFromCharacter(Trie trie, int beginNode, unsigned char letter) {
     return list->targetNode;
 }
 
-void createTransition(Trie trie, int startNode, int targetNode, unsigned char letter) {
+void createTransitionInTrie(Trie trie, int startNode, int targetNode, unsigned char letter) {
     if(trie == NULL) {
         fprintf(stderr, "Impossible d'ajouter une transition dans un trie vide \n");
         freeTrie(trie);
         exit(EXIT_FAILURE);
     }
 
-	int nextNode = getNodeFromCharacter(trie, startNode, letter);
-	if (nextNode == targetNode) {
-		return;
-	}
+		int nextNode = getNodeFromCharacter(trie, startNode, letter);
+		if (nextNode == targetNode) {
+			return;
+		}
     int isANewNode = !isNodeInTrie(trie, targetNode);
     if(isANewNode) {
         if (isTrieFull(trie)) {
@@ -193,19 +189,16 @@ void createTransition(Trie trie, int startNode, int targetNode, unsigned char le
             return;
         }
     }
-
-	List result = allocateAndInitializeList(startNode, targetNode, letter);
-	if (result == NULL) {
-        freeTrie(trie);
-        exit(EXIT_FAILURE);
-	}
-	
-	int key = getValueFromHashFunction(startNode, letter, trie->maxNode * FILL_RATE);
-    appendListInTableOfList(trie->transition, result, key);
-
-	if(isANewNode) {
-        ++trie->nextNode;
-    }
+		List result = allocateAndInitializeList(startNode, targetNode, letter);
+		if (result == NULL) {
+					freeTrie(trie);
+					exit(EXIT_FAILURE);
+		}
+		int key = getValueFromHashFunction(startNode, letter, trie->maxNode * FILL_RATE);
+		appendListInTableOfList(trie->transition, result, key);
+		if(isANewNode) {
+					++trie->nextNode;
+		}
 }
 
 void freeTrie(Trie trie) {

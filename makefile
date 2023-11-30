@@ -16,15 +16,21 @@ genere-word: genere-word.o
 
 genere-word.o: genere-word.c
 		$(CC) -c genere-word.c $(CFLAGS)
+		
+stackTransition.o: stackTransition.c
+		$(CC) -c stackTransition.c $(CFLAGS)
 
-ac.o: ac.c Trie/trie.h
+queue.o: queue.c
+		$(CC) -c queue.c $(CFLAGS)
+
+ac.o: ac.c Trie/trie.h stackTransition.h queue.h
 		$(CC) -c ac.c $(CFLAGS)
 
-ac_hachage: ac.o Trie/trie_hash.o
-		$(CC) -o ac_hachage ac.o $(LDFLAGS)
+ac_hachage: ac.o Trie/trie_hash.o stackTransition.o queue.o
+		$(CC) -o ac_hachage ac.o Trie/trie_hash.o stackTransition.o queue.o $(LDFLAGS)
 
-ac_matrice: ac.o Trie/trie_matrix.o
-		$(CC) -o ac_matrice ac.o $(LDFLAGS)
+ac_matrice: ac.o Trie/trie_matrix.o stackTransition.o queue.o
+		$(CC) -o ac_matrice ac.o Trie/trie_matrix.o stackTransition.o queue.o $(LDFLAGS)
 
 clean:
 	$(RM) *.o genere-text genere-word ac_hachage ac_matrice

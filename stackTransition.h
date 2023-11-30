@@ -24,7 +24,7 @@ Stack createStack();
 /**
  * push : ajoute à la pile stack une transition de startNode vers targetNode en character
  */
-void push(Stack stack, int startNode, char character, int targetNode);
+void push(Stack stack, int startNode, unsigned char character, int targetNode);
 
 /**
  * pop : retire et renvoie la valeur du haut de la pile
@@ -32,27 +32,27 @@ void push(Stack stack, int startNode, char character, int targetNode);
 Transition pop(Stack stack);
 
 /**
- * freeStack : libère la pile de la mémoire
+ * freeStack : libère l'espace mémoire alloué pour la pile stack.
  */
 void freeStack(Stack stack);
 
 /**
- * getStartNodeFromTransition : renvoie le noeud de départ d'une transition
+ * getStartNodeFromTransition : renvoie le noeud de départ d'une transition.
  */
 int getStartNodeFromTransition(Transition transition);
 
 /**
- * getCharacterFromTransition : renvoie le caractère d'une transition
+ * getCharacterFromTransition : renvoie le caractère d'une transition.
  */
-char getCharacterFromTransition(Transition transition);
+unsigned char getCharacterFromTransition(Transition transition);
 
 /**
- * getTargetNodeFromTransition : renvoie le noeud d'arrivée d'une transition
+ * getTargetNodeFromTransition : renvoie le noeud d'arrivée d'une transition.
  */
 int getTargetNodeFromTransition(Transition transition);
 
 /**
- * freeTransition : libère la transition en mémoire
+ * freeTransition : libère la transition en mémoire.
  */
 void freeTransition(Transition transition);
 

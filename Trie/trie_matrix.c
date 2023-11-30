@@ -39,9 +39,6 @@ void testFunctionsMatrix(void);
  *                                FONCTIONS
  *----------------------------------------------------------------------------*/
 
-int main(void) {
-	testFunctionsMatrix();
-}
 
 Trie createTrie(int maxNode) {
     if(maxNode < MIN_NODE_NUMBER) {
@@ -80,7 +77,7 @@ void insertInTrie(Trie trie, unsigned char *word) {
         if (result != NO_NODE) {
             currentNode = result;
         } else {
-            createTransition(trie, currentNode, trie->nextNode, word[currentLetterNb]);
+            createTransitionInTrie(trie, currentNode, trie->nextNode, word[currentLetterNb]);
             currentNode = getNodeFromCharacter(trie, currentNode, word[currentLetterNb]);
         }
         if(currentNode == NO_NODE) {
@@ -137,7 +134,7 @@ int getNodeFromCharacter(Trie trie, int beginNode, unsigned char c) {
     return trie->transition[beginNode][c];
 }
 
-void createTransition(Trie trie, int startNode, int targetNode, unsigned char letter) {
+void createTransitionInTrie(Trie trie, int startNode, int targetNode, unsigned char letter) {
     if(trie == NULL) {
         fprintf(stderr, "Impossible d'utiliser un trie vide \n");
         freeTrie(trie);

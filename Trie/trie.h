@@ -56,7 +56,7 @@ int getNodeFromCharacter(Trie trie, int beginNode, unsigned char letter);
  * createTransition : rajoute une transition dans trie allant de startNode vers
  *                    beginNode en letter
  */
-void createTransition(Trie trie, int startNode, int targetNode, unsigned char letter);
+void createTransitionInTrie(Trie trie, int startNode, int targetNode, unsigned char letter);
 
 /**
  * isTrieFull : indique si trie est plein
