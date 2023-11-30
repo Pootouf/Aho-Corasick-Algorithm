@@ -5,10 +5,7 @@ CFLAGS = -std=c18 \
 LDFLAGS =
 RM = rm
 
-all: trie_matrix trie_hash
-
-trie_matrix: trie_matrix.o
-		$(CC) -o trie_matrix trie_matrix.o $(LDFLAGS)
+all: trie_hash.o trie_matrix.o
 
 trie_matrix.o: trie_matrix.c trie.h
 	$(CC) -c trie_matrix.c $(CFLAGS)
@@ -19,4 +16,4 @@ trie_hash.o: trie_hash.c trie.h
 
 
 clean:
-	$(RM) *.o  trie_matrix trie_hash
+	$(RM) *.o

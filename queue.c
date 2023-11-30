@@ -69,7 +69,10 @@ int removeValue(Queue queue) {
 	Cell firstCell = queue->first;
 	if(firstCell != NULL) {
 		Cell nextCell = firstCell->next;
-		nextCell->prev = NULL;
+		if(nextCell != NULL) {
+			nextCell->prev = NULL;
+		}
+		queue->first = nextCell;
 		int result = firstCell->value;
 		free(firstCell);
 		return result;

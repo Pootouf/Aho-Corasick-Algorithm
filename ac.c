@@ -64,7 +64,7 @@ void ahoCorasick(unsigned char**wordList, int numberOfWord, char* text,
 		Trie trie = initAhoCorasick(wordList, numberOfWord, sup);
 		int e = FIRST_NODE;
 		for(int j = 0; j < textSize; j++) {
-			int originNode;
+			int originNode = FIRST_NODE;
 			while((originNode = getNodeFromCharacter(trie, e, (unsigned char)text[j])) 
 																																	== NO_NODE) {
 				e = sup[e];
@@ -82,7 +82,9 @@ Trie initAhoCorasick(unsigned char** wordList, int numberOfWord, int *sup) {
         insertInTrie(trie, wordList[i]);
     }
     for(unsigned char c = 0; c < (unsigned char) UCHAR_MAX; c++) {
-        createTransitionInTrie(trie, FIRST_NODE, FIRST_NODE, c);
+				if(getNodeFromCharacter(trie, FIRST_NODE, c) == NO_NODE) {
+					createTransitionInTrie(trie, FIRST_NODE, FIRST_NODE, c);
+				}
     }
     complete(trie, sup);
     return trie;
@@ -93,7 +95,7 @@ void complete(Trie trie, int *sup) {
 		Stack l = getAllTransitions(trie, FIRST_NODE);
 		Transition t;
 		while((t = pop(l)) != NULL) {
-			int targetNode = getTargetNodeFromTransition(t);
+			int targetNode = getTargetNodeFromTransition(t);\
 			addValue(targetNode, f);
 			sup[targetNode] = FIRST_NODE;
 		}
