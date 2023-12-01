@@ -60,20 +60,36 @@ int main(int argc, char **argv) {
 
 void ahoCorasick(unsigned char**wordList, int numberOfWord, char* text, 
 														int textSize) {
-		int sup[MAX_NODE];
-		Trie trie = initAhoCorasick(wordList, numberOfWord, sup);
-		int e = FIRST_NODE;
-		for(int j = 0; j < textSize; j++) {
-			int originNode = FIRST_NODE;
-			while((originNode = getNodeFromCharacter(trie, e, (unsigned char)text[j])) 
-																																	== NO_NODE) {
-				e = sup[e];
-			}
-			e = originNode;
-			if(isNodeFinal(trie, e) == FINAL) {
-				printf("Il y a une occurrence\n");
-			}
-		}
+    int compteur = 0;
+    int *sup = malloc(sizeof(int) * (MAX_NODE));
+    if(sup == NULL) {
+        fprintf(stderr, "Impossible to allocate sup\n");
+        exit(EXIT_FAILURE);
+    }
+    for(int i = 0; i < MAX_NODE; i++) {
+        sup[i] = 0;
+    }
+
+    Trie trie = initAhoCorasick(wordList, numberOfWord, sup);
+    int e = FIRST_NODE;
+    for(int i = 0; i < 10; i++) {
+        printf("Noeud de départ : %d\n", i);
+        printf("Noeud de suppléance : %d\n", sup[i]);
+    }
+    for(int j = 0; j < textSize; j++) {
+        int originNode = FIRST_NODE;
+        while((originNode = getNodeFromCharacter(trie, e, (unsigned char)text[j]))
+                                                                                                                                == NO_NODE) {
+            e = sup[e];
+        }
+        e = originNode;
+        if(isNodeFinal(trie, e) == FINAL) {
+            printf("Il y a une occurrence\n");
+            compteur++;
+        }
+    }
+    free(sup);
+    printf("Compteur : %d\n", compteur);
 }
 
 Trie initAhoCorasick(unsigned char** wordList, int numberOfWord, int *sup) {
@@ -95,7 +111,7 @@ void complete(Trie trie, int *sup) {
 		Stack l = getAllTransitions(trie, FIRST_NODE);
 		Transition t;
 		while((t = pop(l)) != NULL) {
-			int targetNode = getTargetNodeFromTransition(t);\
+			int targetNode = getTargetNodeFromTransition(t);
 			addValue(targetNode, f);
 			sup[targetNode] = FIRST_NODE;
 		}
@@ -112,12 +128,13 @@ void complete(Trie trie, int *sup) {
 															getCharacterFromTransition(t))) == NO_NODE){
 					s = sup[s];
 				}
-				sup[getTargetNodeFromTransition(t)] = originNode;
+                sup[getTargetNodeFromTransition(t)] = originNode;
 				if(isNodeFinal(trie, originNode) == FINAL) {
 					setNodeFinal(trie, getTargetNodeFromTransition(t));
 				}
 			}
 		}
+    freeStack(l);
 }
 
 /* ----------------------------------------------------------------------------
@@ -168,6 +185,10 @@ static unsigned char **getAllWordsFromFile(FILE *f, int *size) {
 	}
 	while((line = (unsigned char *)fgets((char *)line, MAX_LINE_LENGTH, f)) != NULL) {
 		wordList[currentInd] = line;
+        char* endOfLine = strchr((char *)line, '\n');
+        if (endOfLine != NULL) {
+            *endOfLine = '\0';
+        }
 		++currentInd;
 		line = malloc(sizeof(char) * MAX_LINE_LENGTH);
 		if(line == NULL) {
