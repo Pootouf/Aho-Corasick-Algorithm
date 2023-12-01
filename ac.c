@@ -79,13 +79,16 @@ void ahoCorasick(unsigned char**wordList, int numberOfWord, char* text,
     for(int j = 0; j < textSize; j++) {
         int originNode = FIRST_NODE;
         while((originNode = getNodeFromCharacter(trie, e, (unsigned char)text[j]))
-                                                                                                                                == NO_NODE) {
+                                                    == NO_NODE) {
             e = sup[e];
         }
         e = originNode;
         if(isNodeFinal(trie, e) == FINAL) {
-            printf("Il y a une occurrence\n");
-            compteur++;
+					if(sup[e] != FIRST_NODE && isNodeFinal(trie, sup[e]) == FINAL) {
+						compteur++;
+						printf("%d\n", sup[e]);
+					}
+					compteur++;
         }
     }
     free(sup);
