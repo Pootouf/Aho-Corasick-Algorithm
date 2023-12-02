@@ -78,4 +78,9 @@ void setNodeFinal(Trie trie, int node);
  */
 char isNodeFinal(Trie trie, int node);
 
+/**
+ * getLastNode : renvoie le dernier noeud ajouté
+ */
+int getLastNode(Trie trie);
+
 #endif

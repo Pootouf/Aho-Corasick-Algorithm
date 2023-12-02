@@ -70,12 +70,18 @@ void ahoCorasick(unsigned char**wordList, int numberOfWord, char* text,
         sup[i] = 0;
     }
 
-    Trie trie = initAhoCorasick(wordList, numberOfWord, sup);
-    int e = FIRST_NODE;
-    for(int i = 0; i < 10; i++) {
-        printf("Noeud de départ : %d\n", i);
-        printf("Noeud de suppléance : %d\n", sup[i]);
+    int *numberOfOccurrencies = malloc(sizeof(int) * (MAX_NODE));
+    if(numberOfOccurrencies == NULL) {
+        fprintf(stderr, "Impossible to allocate occurrencies\n");
+        exit(EXIT_FAILURE);
     }
+    for(int i = 0; i < MAX_NODE; i++) {
+        numberOfOccurrencies[i] = 0;
+    }
+
+    Trie trie = initAhoCorasick(wordList, numberOfWord, sup, numberOfOccurrencies);
+    int e = FIRST_NODE;
+
     for(int j = 0; j < textSize; j++) {
         int originNode = FIRST_NODE;
         while((originNode = getNodeFromCharacter(trie, e, (unsigned char)text[j]))
@@ -83,33 +89,31 @@ void ahoCorasick(unsigned char**wordList, int numberOfWord, char* text,
             e = sup[e];
         }
         e = originNode;
-        if(isNodeFinal(trie, e) == FINAL) {
-					if(sup[e] != FIRST_NODE && isNodeFinal(trie, sup[e]) == FINAL) {
-						compteur++;
-						printf("%d\n", sup[e]);
-					}
-					compteur++;
+        if(numberOfOccurrencies[e] != 0) {
+            compteur += numberOfOccurrencies[e];
         }
     }
     free(sup);
-    printf("Compteur : %d\n", compteur);
+    free(numberOfOccurrencies);
+    printf("%d\n", compteur);
 }
 
-Trie initAhoCorasick(unsigned char** wordList, int numberOfWord, int *sup) {
+Trie initAhoCorasick(unsigned char** wordList, int numberOfWord, int *sup, int* numberOfOccurrencies) {
     Trie trie = createTrie(MAX_NODE);
     for(size_t i = 0; i < (size_t)numberOfWord; i++) {
         insertInTrie(trie, wordList[i]);
+        numberOfOccurrencies[getLastNode(trie)] = 1;
     }
     for(unsigned char c = 0; c < (unsigned char) UCHAR_MAX; c++) {
 				if(getNodeFromCharacter(trie, FIRST_NODE, c) == NO_NODE) {
 					createTransitionInTrie(trie, FIRST_NODE, FIRST_NODE, c);
 				}
     }
-    complete(trie, sup);
+    complete(trie, sup, numberOfOccurrencies);
     return trie;
 }
 
-void complete(Trie trie, int *sup) {
+void complete(Trie trie, int *sup, int* numberOfOccurrencies) {
 		Queue f = create();
 		Stack l = getAllTransitions(trie, FIRST_NODE);
 		Transition t;
@@ -131,10 +135,9 @@ void complete(Trie trie, int *sup) {
 															getCharacterFromTransition(t))) == NO_NODE){
 					s = sup[s];
 				}
-                sup[getTargetNodeFromTransition(t)] = originNode;
-				if(isNodeFinal(trie, originNode) == FINAL) {
-					setNodeFinal(trie, getTargetNodeFromTransition(t));
-				}
+                int p = getTargetNodeFromTransition(t);
+                sup[p] = originNode;
+                numberOfOccurrencies[p] += numberOfOccurrencies[sup[p]];
 			}
 		}
     freeStack(l);

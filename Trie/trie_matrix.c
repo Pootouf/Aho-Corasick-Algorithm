@@ -202,6 +202,10 @@ char isNodeFinal(Trie trie, int node) {
     return trie->finite[node];
 }
 
+int getLastNode(Trie trie) {
+    return trie->nextNode - 1;
+}
+
 
 /* ----------------------------------------------------------------------------
  *                                 OUTILS

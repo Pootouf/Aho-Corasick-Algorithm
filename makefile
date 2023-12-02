@@ -3,16 +3,16 @@ CFLAGS = -std=c18 -Wall -Wconversion -Werror -Wextra -Wfatal-errors -Wpedantic -
 LDFLAGS = -lm
 RM = rm
 
-all: genere-text genere-word ac_hachage ac_matrice
+all: genere-texte genere-mots ac-hachage ac-matrice
 
-genere-text: genere-text.o
-		$(CC) -o genere-text genere-text.o $(LDFLAGS)
+genere-texte: genere-text.o
+		$(CC) -o genere-texte genere-text.o $(LDFLAGS)
 
 genere-text.o: genere-text.c
 		$(CC) -c genere-text.c $(CFLAGS)
 		
-genere-word: genere-word.o
-		$(CC) -o genere-word genere-word.o $(LDFLAGS)
+genere-mots: genere-word.o
+		$(CC) -o genere-mots genere-word.o $(LDFLAGS)
 
 genere-word.o: genere-word.c
 		$(CC) -c genere-word.c $(CFLAGS)
@@ -26,11 +26,11 @@ queue.o: queue.c
 ac.o: ac.c Trie/trie.h stackTransition.h queue.h
 		$(CC) -c ac.c $(CFLAGS)
 
-ac_hachage: ac.o Trie/trie_hash.o stackTransition.o queue.o
-		$(CC) -o ac_hachage ac.o Trie/trie_hash.o stackTransition.o queue.o $(LDFLAGS)
+ac-hachage: ac.o Trie/trie_hash.o stackTransition.o queue.o
+		$(CC) -o ac-hachage ac.o Trie/trie_hash.o stackTransition.o queue.o $(LDFLAGS)
 
-ac_matrice: ac.o Trie/trie_matrix.o stackTransition.o queue.o
-		$(CC) -o ac_matrice ac.o Trie/trie_matrix.o stackTransition.o queue.o $(LDFLAGS)
+ac-matrice: ac.o Trie/trie_matrix.o stackTransition.o queue.o
+		$(CC) -o ac-matrice ac.o Trie/trie_matrix.o stackTransition.o queue.o $(LDFLAGS)
 
 clean:
-	$(RM) *.o genere-text genere-word ac_hachage ac_matrice
+	$(RM) *.o genere-texte genere-mots ac-hachage ac-matrice Trie/*.o

@@ -21,12 +21,12 @@
  * 									une liste de mots wordList de longueur numberOfWord
  * 									que l'on ajoute dans le trie.
  */
-Trie initAhoCorasick(unsigned char** wordList, int numberOfWord, int *sup);
+Trie initAhoCorasick(unsigned char** wordList, int numberOfWord, int *sup, int* numberOfOccurrencies);
 
 /**
  * complete : prend un trie et y ajoute les flèches de suppléance.
  */
-void complete(Trie trie, int *sup);
+void complete(Trie trie, int *sup, int* numberOfOccurrencies);
 
 /**
  * ahoCorasick : exécute l'algorithme d'Aho-Corasick.
