@@ -11,3 +11,5 @@ Trie/trie_matrix
 texts/*
 results/*
 words/*
+venv
+graph/*

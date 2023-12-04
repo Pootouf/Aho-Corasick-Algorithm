@@ -12,14 +12,16 @@ do
 	do
 	  text=texts/texts${alphabetSize}.txt
 	  word=words/words${alphabetSize}min5max15.txt
-	  echo Nombre d\'occurences dans ${text} pour $word avec ${algo}
-	  { time ./${algo} ${word} ${text}; } 2> results/result${algo}${alphabetSize}min5max15.txt
+	  result=$({ time ./${algo} ${word} ${text};} 2>&1 >/dev/null)
+	  grep=$(echo "$result" | grep "real")
+	  echo "$grep" > results/result${algo}${alphabetSize}min5max15.txt
 	  word=words/words${alphabetSize}min15max30.txt
-    echo Nombre d\'occurences dans ${text} pour $word avec ${algo}
-	  { time ./${algo} ${word} ${text}; } 2> results/result${algo}${alphabetSize}min15max30.txt
-	  word=words/words${alphabetSize}min30max60
-    echo Nombre d\'occurences dans ${text} pour $word avec ${algo}
-	  { time ./${algo} ${word}.txt ${text}; } 2> results/result${algo}${alphabetSize}min30max60.txt
-	  echo
+    result=$({ time ./${algo} ${word} ${text};} 2>&1 >/dev/null)
+    grep=$(echo "$result" | grep "real")
+    echo "$grep" > results/result${algo}${alphabetSize}min15max30.txt
+	  word=words/words${alphabetSize}min30max60.txt
+	  result=$({ time ./${algo} ${word} ${text};} 2>&1 >/dev/null)
+    grep=$(echo "$result" | grep "real")
+    echo "$grep" > results/result${algo}${alphabetSize}min30max60.txt
 	done
 done
