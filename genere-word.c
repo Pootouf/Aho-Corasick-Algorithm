@@ -1,14 +1,12 @@
 #include <stdlib.h>
 /*-------------------------------------BIBLIOTHEQUES--------------------------*/
 #include <stdio.h>
-#include <limits.h>
 #include <time.h>
 #include <string.h>
 
 /*----------------------------------------CONSTANTES--------------------------*/
 
 #define CHAR_START 33
-#define CHAR_END 126
 
 
 /* ----------------------------------------------------------------------------
@@ -44,7 +42,8 @@ int main(int argc, char* argv[]) {
 *-----------------------------------------------------------------------------*/
 
 void generateWords(int wordNumber, int wordSizeMin, int wordSizeMax, int alphabetSize) {
-	for(int i = 0; i < wordNumber; i++) {
+	for(unsigned int i = 0; i < (unsigned int)wordNumber; i++) {
+        srand((unsigned int)time(NULL) * (i+2));
 		int wordSize = (wordSizeMin + rand() % (wordSizeMax + 1 - wordSizeMin));
 		for(int j = 0; j < wordSize; j++) {
 			char character = (char) (CHAR_START + rand() % (alphabetSize));

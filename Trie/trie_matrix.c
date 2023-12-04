@@ -78,7 +78,8 @@ void insertInTrie(Trie trie, unsigned char *word) {
             currentNode = result;
         } else {
             createTransitionInTrie(trie, currentNode, trie->nextNode, word[currentLetterNb]);
-            currentNode = getNodeFromCharacter(trie, currentNode, word[currentLetterNb]);
+            currentNode = trie->nextNode;
+            trie->nextNode++;
         }
         if(currentNode == NO_NODE) {
             return;
@@ -140,17 +141,11 @@ void createTransitionInTrie(Trie trie, int startNode, int targetNode, unsigned c
         freeTrie(trie);
         exit(EXIT_FAILURE);
     }
-    int isANewNode = !isNodeInTrie(trie, targetNode);
-    if (isANewNode) {
-        if(isTrieFull(trie)) {
-            fprintf(stderr, "Impossible d'ajouter car l'arbre est plein\n");
-            return;
-        }
+    if(isTrieFull(trie)) {
+        fprintf(stderr, "Impossible d'ajouter car l'arbre est plein\n");
+        return;
     }
     trie->transition[startNode][letter] = targetNode;
-    if(isANewNode) {
-        trie->nextNode++;
-    }
 }
 
 
@@ -162,6 +157,7 @@ void freeTrie(Trie trie) {
             free(matrix[i]);
         }
     }
+    free(matrix);
     if (trie->finite != NULL) {
         free(trie->finite);
     }

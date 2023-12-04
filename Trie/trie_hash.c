@@ -126,7 +126,8 @@ void insertInTrie(Trie trie, unsigned char *word) {
         int nextNode = getNodeFromCharacter(trie, currentNode, word[currentLetterNb]);
         if (nextNode == NO_NODE) {
             createTransitionInTrie(trie, currentNode, trie->nextNode, word[currentLetterNb]);
-            currentNode = getNodeFromCharacter(trie, currentNode, word[currentLetterNb]);
+            currentNode = trie->nextNode;
+            trie->nextNode++;
         } else {
             currentNode = nextNode;
         }
@@ -178,27 +179,21 @@ void createTransitionInTrie(Trie trie, int startNode, int targetNode, unsigned c
         exit(EXIT_FAILURE);
     }
 
-		int nextNode = getNodeFromCharacter(trie, startNode, letter);
-		if (nextNode == targetNode) {
-			return;
-		}
-    int isANewNode = !isNodeInTrie(trie, targetNode);
-    if(isANewNode) {
-        if (isTrieFull(trie)) {
-            fprintf(stderr, "Impossible d'ajouter car l'arbre est plein\n");
-            return;
-        }
+    int nextNode = getNodeFromCharacter(trie, startNode, letter);
+    if (nextNode == targetNode) {
+        return;
     }
-		List result = allocateAndInitializeList(startNode, targetNode, letter);
-		if (result == NULL) {
-					freeTrie(trie);
-					exit(EXIT_FAILURE);
-		}
-		int key = getValueFromHashFunction(startNode, letter, trie->maxNode * FILL_RATE);
-		appendListInTableOfList(trie->transition, result, key);
-		if(isANewNode) {
-					++trie->nextNode;
-		}
+    if (isTrieFull(trie)) {
+        fprintf(stderr, "Impossible d'ajouter car l'arbre est plein\n");
+        return;
+    }
+    List result = allocateAndInitializeList(startNode, targetNode, letter);
+    if (result == NULL) {
+                freeTrie(trie);
+                exit(EXIT_FAILURE);
+    }
+    int key = getValueFromHashFunction(startNode, letter, trie->maxNode * FILL_RATE);
+    appendListInTableOfList(trie->transition, result, key);
 }
 
 void freeTrie(Trie trie) {

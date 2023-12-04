@@ -9,7 +9,7 @@
 #include "stackTransition.h"
 
 /*----------------------------------------CONSTANTES--------------------------*/
-#define MAX_NODE 999
+#define MAX_NODE 500000
 
 #define MAX_LINE_NUMBER 999
 

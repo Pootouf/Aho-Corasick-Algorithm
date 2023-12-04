@@ -21,12 +21,12 @@ static char *getStringFromFile(FILE *f);
  * 											 où chaque ligne comporte un mot, rempli également la
  * 											 taille size.
  */
-static unsigned char **getAllWordsFromFile(FILE *f, int *size);
+static unsigned char **getAllWordsFromFile(FILE *f, size_t *size);
 
 /**
  * freeWordList : libère l'espace alloué à chaque élément de wordList.
  */
-void freeWordList(unsigned char **wordList);
+void freeWordList(unsigned char **wordList, size_t size);
 
 /* ----------------------------------------------------------------------------
 *                                FONCTIONS
@@ -44,40 +44,34 @@ int main(int argc, char **argv) {
 	FILE *f = fopen(argv[1], "r");
 	if(f == NULL) {
 		fprintf(stderr, "Error while opening file\n");
+        fclose(text);
 		exit(EXIT_FAILURE);
 	}
 	char *y = getStringFromFile(text);
-	int *numberOfWord = malloc(sizeof(int));
-	if(numberOfWord == NULL) {
-		fprintf(stderr, "Error while opening size\n");
-		exit(EXIT_FAILURE);
-	}
-	unsigned char **wordList = getAllWordsFromFile(f, numberOfWord);
-	int textSize = (int)strlen(y); 
-	ahoCorasick(wordList, *numberOfWord, y, textSize);
+    if(y == NULL) {
+        fclose(f);
+        fclose(text);
+        exit(EXIT_FAILURE);
+    }
+    size_t textSize = strlen(y);
+	size_t numberOfWord = 0;
+	unsigned char **wordList = getAllWordsFromFile(f, &numberOfWord);
+
+	ahoCorasick(wordList, (int)numberOfWord, y, (int)textSize);
+
+    free(y);
+    freeWordList(wordList, numberOfWord);
+    fclose(f);
+    fclose(text);
 	return EXIT_SUCCESS;
 }
 
 void ahoCorasick(unsigned char**wordList, int numberOfWord, char* text, 
 														int textSize) {
     int compteur = 0;
-    int *sup = malloc(sizeof(int) * (MAX_NODE));
-    if(sup == NULL) {
-        fprintf(stderr, "Impossible to allocate sup\n");
-        exit(EXIT_FAILURE);
-    }
-    for(int i = 0; i < MAX_NODE; i++) {
-        sup[i] = 0;
-    }
+    int sup[MAX_NODE];
 
-    int *numberOfOccurrencies = malloc(sizeof(int) * (MAX_NODE));
-    if(numberOfOccurrencies == NULL) {
-        fprintf(stderr, "Impossible to allocate occurrencies\n");
-        exit(EXIT_FAILURE);
-    }
-    for(int i = 0; i < MAX_NODE; i++) {
-        numberOfOccurrencies[i] = 0;
-    }
+    int numberOfOccurrencies[MAX_NODE];
 
     Trie trie = initAhoCorasick(wordList, numberOfWord, sup, numberOfOccurrencies);
     int e = FIRST_NODE;
@@ -93,8 +87,7 @@ void ahoCorasick(unsigned char**wordList, int numberOfWord, char* text,
             compteur += numberOfOccurrencies[e];
         }
     }
-    free(sup);
-    free(numberOfOccurrencies);
+    freeTrie(trie);
     printf("%d\n", compteur);
 }
 
@@ -105,41 +98,44 @@ Trie initAhoCorasick(unsigned char** wordList, int numberOfWord, int *sup, int* 
         numberOfOccurrencies[getLastNode(trie)] = 1;
     }
     for(unsigned char c = 0; c < (unsigned char) UCHAR_MAX; c++) {
-				if(getNodeFromCharacter(trie, FIRST_NODE, c) == NO_NODE) {
-					createTransitionInTrie(trie, FIRST_NODE, FIRST_NODE, c);
-				}
+        if(getNodeFromCharacter(trie, FIRST_NODE, c) == NO_NODE) {
+            createTransitionInTrie(trie, FIRST_NODE, FIRST_NODE, c);
+        }
     }
     complete(trie, sup, numberOfOccurrencies);
     return trie;
 }
 
 void complete(Trie trie, int *sup, int* numberOfOccurrencies) {
-		Queue f = create();
-		Stack l = getAllTransitions(trie, FIRST_NODE);
-		Transition t;
-		while((t = pop(l)) != NULL) {
-			int targetNode = getTargetNodeFromTransition(t);
-			addValue(targetNode, f);
-			sup[targetNode] = FIRST_NODE;
-		}
-		while(!isQueueEmpty(f)) {
-			int r = removeValue(f);
-			freeStack(l);
-			l = getAllTransitions(trie, r);
-			while((t = pop(l)) != NULL) {
-				int targetNode = getTargetNodeFromTransition(t);
-				addValue(targetNode, f);
-				int s = sup[r];
-				int originNode;
-				while((originNode = getNodeFromCharacter(trie, s, 
-															getCharacterFromTransition(t))) == NO_NODE){
-					s = sup[s];
-				}
-                int p = getTargetNodeFromTransition(t);
-                sup[p] = originNode;
-                numberOfOccurrencies[p] += numberOfOccurrencies[sup[p]];
-			}
-		}
+    Queue f = create();
+    Stack l = getAllTransitions(trie, FIRST_NODE);
+    Transition t;
+    while((t = pop(l)) != NULL) {
+        int targetNode = getTargetNodeFromTransition(t);
+        addValue(targetNode, f);
+        sup[targetNode] = FIRST_NODE;
+        freeTransition(t);
+    }
+    while(!isQueueEmpty(f)) {
+        int r = removeValue(f);
+        freeStack(l);
+        l = getAllTransitions(trie, r);
+        while((t = pop(l)) != NULL) {
+            int targetNode = getTargetNodeFromTransition(t);
+            addValue(targetNode, f);
+            int s = sup[r];
+            int originNode;
+            while((originNode = getNodeFromCharacter(trie, s,
+                                                        getCharacterFromTransition(t))) == NO_NODE){
+                s = sup[s];
+            }
+            int p = getTargetNodeFromTransition(t);
+            sup[p] = originNode;
+            numberOfOccurrencies[p] += numberOfOccurrencies[sup[p]];
+            freeTransition(t);
+        }
+    }
+    freeQueue(f);
     freeStack(l);
 }
 
@@ -148,7 +144,7 @@ void complete(Trie trie, int *sup, int* numberOfOccurrencies) {
 *----------------------------------------------------------------------------*/
 Stack getAllTransitions(Trie trie, int beginNode) {
 	Stack stack = createStack();
-	for(unsigned char a = 0; a < UCHAR_MAX; a++) {
+	for(unsigned char a = 0; (int)a < UCHAR_MAX; a++) {
 		int targetNode = getNodeFromCharacter(trie, beginNode, a);
 		if(targetNode != beginNode && targetNode != NO_NODE) {
 			push(stack, beginNode, a, targetNode);
@@ -167,6 +163,7 @@ static char *getStringFromFile(FILE *f) {
 	while(currentChar < INT_MAX && fscanf(f, "%c", &y[currentChar]) == 1) {
 		++currentChar;
 	}
+    y[currentChar] = '\0';
 	if(!feof(f)) {
 		free(y);
 		fprintf(stderr, "Error while reading file text \n");
@@ -175,37 +172,36 @@ static char *getStringFromFile(FILE *f) {
 	return y;
 }
 
-static unsigned char **getAllWordsFromFile(FILE *f, int *size) {
-	unsigned char **wordList = malloc(MAX_LINE_NUMBER * sizeof(char));
+static unsigned char **getAllWordsFromFile(FILE *f, size_t *size) {
+	unsigned char **wordList = calloc(sizeof(char), MAX_LINE_NUMBER);
 	if(wordList == NULL) {
 		fprintf(stderr, "Error while allocating\n");
-		free(size);
 		exit(EXIT_FAILURE);
 	}
-	int currentInd = 0;
-	unsigned char *line = malloc(sizeof(char) * MAX_LINE_LENGTH);
+	size_t currentInd = 0;
+	unsigned char *line = calloc(sizeof(char), MAX_LINE_LENGTH);
 	if(line == NULL) {
 		fprintf(stderr, "Error while allocating a line\n");
-		free(size);
-		free(wordList);
+        freeWordList(wordList, currentInd);
+        exit(EXIT_FAILURE);
 	}
-	while((line = (unsigned char *)fgets((char *)line, MAX_LINE_LENGTH, f)) != NULL) {
+	while(fgets((char *)line, MAX_LINE_LENGTH, f) != NULL) {
 		wordList[currentInd] = line;
         char* endOfLine = strchr((char *)line, '\n');
         if (endOfLine != NULL) {
             *endOfLine = '\0';
         }
 		++currentInd;
-		line = malloc(sizeof(char) * MAX_LINE_LENGTH);
+		line = calloc(sizeof(char), MAX_LINE_LENGTH);
 		if(line == NULL) {
 			fprintf(stderr, "Error while allocating a line\n");
-			free(size);
-			free(wordList);
+            freeWordList(wordList, currentInd);
+            exit(EXIT_FAILURE);
 		}
 	}
+    free(line);
 	if(!feof(f)) {
-		free(wordList);
-		free(size);
+        freeWordList(wordList, currentInd);
 		fprintf(stderr, "Error while reading file word\n");
 		exit(EXIT_FAILURE);
 	}
@@ -213,13 +209,12 @@ static unsigned char **getAllWordsFromFile(FILE *f, int *size) {
 	return wordList;
 }
 
-void freeWordList(unsigned char **wordList) {
+void freeWordList(unsigned char **wordList, size_t size) {
 	if(wordList == NULL) {
 		return;
 	}
-	int currentId = 0;
-	while(wordList[currentId] != NULL) {
-		free(wordList[currentId]);
-		currentId++;
+	for(size_t i = 0; i < size; i++) {
+		free(wordList[i]);
 	}
+    free(wordList);
 }

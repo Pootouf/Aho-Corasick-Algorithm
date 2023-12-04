@@ -107,7 +107,7 @@ Cell createCell(int value) {
 
 void removeAll(Queue queue) {
 	if(queue == NULL) {
-		fprintf(stderr, "Queue not valid, cannot add value\n");
+		fprintf(stderr, "Queue not valid, cannot remove value\n");
 		exit(EXIT_FAILURE);
 	}
 	while(queue->first != NULL) {

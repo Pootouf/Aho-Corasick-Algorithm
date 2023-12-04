@@ -2,9 +2,12 @@
 cmake-build-debug
 CMakeLists.txt
 *.o
-genere-text
-genere-word
-ac_hachage
-ac_matrice
+genere-texte
+genere-mots
+ac-hachage
+ac-matrice
 Trie/trie_hash
 Trie/trie_matrix
+texts/*
+results/*
+words/*
